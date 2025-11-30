@@ -1,0 +1,237 @@
+// onSubmit
+const transactionForm = document.getElementById("transactionForm");
+transactionForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+});
+
+// Update Transactions
+const updateTransactions = () => {
+    let transactionList = document.getElementById("transactionList");
+    transactionList.innerHTML = "";
+}
+
+// Onload
+document.addEventListener("DOMContentLoaded", (e) => {
+    // Show all transactions when page load
+    let months = document.getElementById("months");
+    let monthsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    //  Get current month
+    let date = new Date();
+    let monthNum = date.getMonth();
+    let currentMonth = monthsArray[monthNum];
+
+    // Set dropdown value and displaying transactions
+    months.value = currentMonth;
+    displayTransactions();
+    months.addEventListener("change", monthChange);
+    dashboard();
+});
+
+// On month change Function
+let months = document.getElementById("months");
+const monthChange = () => {
+    let transactionList = document.getElementById("transactionList");
+    updateTransactions();
+    displayTransactions();
+    dashboard();
+
+    // If No Transactions on selected month
+    if (transactionList.innerHTML === "") {
+        transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Please change your month!</div>';
+    }
+}
+
+// Display Transactions
+const displayTransactions = () => {
+    let transactionList = document.getElementById("transactionList");
+    let months = document.getElementById("months");
+
+    // LocalStoragen Setup
+    !localStorage.getItem("transactions") ? localStorage.setItem("transactions", "[]") : "";
+    let transactions = JSON.parse(localStorage.getItem("transactions"));
+
+    // Sorting transactions in reverse
+    transactions.sort((a, b) => b.id - a.id);
+
+    // Displaying Transactions
+    transactions.forEach((trans) => {
+        if (trans.month === months.value) {
+            transactionList.innerHTML += `<div class="transaction-item ${trans.type}-item">
+            <div class="transaction-info">
+            <h4>${trans.title}</h4>
+            <p>${trans.category} • ${trans.date}</p>
+            </div>
+            <span class="transaction-amount ${trans.type}">
+            ${trans.type === 'income' ? '+' : '-'} ${trans.amount + "₹"}
+            </span>
+            <button class="delete-btn" data-id="${trans.id}">X</button>
+            </div>`
+        }
+    });
+
+    dashboard();
+}
+
+// Add Transaction
+const addTransaction = document.getElementById("add-transaction");
+addTransaction.addEventListener("click", (e) => {
+    let title = document.getElementById("title");
+    let amount = document.getElementById("amount");
+    let type = document.getElementById("type");
+    let date = document.getElementById("date");
+    let category = document.getElementById("category");
+    let transaction = JSON.parse(localStorage.getItem("transactions"));
+    let input = document.querySelectorAll(".inp");
+
+    // Checking empty fields
+    let emptyFields = [...input].some(el => el.value === "");
+    if (emptyFields) {
+        return;
+    }
+
+    // Months
+    let monthsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let newDate = new Date(date.value);
+    let monthNum = newDate.getMonth();
+
+    // New Transaction
+    let newTransaction = {
+        id: Date.now(),
+        title: title.value,
+        amount: amount.value,
+        type: type.value,
+        category: category.value,
+        date: date.value,
+        month: monthsArray[monthNum]
+    }
+
+    // Saving transaction in localStorage
+    transaction.push(newTransaction);
+    localStorage.setItem("transactions", JSON.stringify(transaction));
+
+    // Clearing input
+    title.value = "";
+    amount.value = "";
+    type.value = "";
+    category.value = "";
+    date.value = "";
+
+    updateTransactions();
+    displayTransactions();
+});
+
+// Delete Transaction
+const transactionList = document.getElementById("transactionList");
+transactionList.addEventListener("click", (e) => {
+    let transactions = JSON.parse(localStorage.getItem("transactions"));
+    if (e.target.classList.contains("delete-btn")) {
+        let transactionId = Number(e.target.dataset.id);
+        let filteredTransactions = transactions.filter((item) => {
+            return transactionId !== item.id;
+        })
+        localStorage.setItem("transactions", JSON.stringify(filteredTransactions));
+        updateTransactions();
+        displayTransactions()
+    }
+})
+
+// Filter
+const filterBtn = document.querySelectorAll(".filter-btn");
+filterBtn.forEach((btn) => {
+    let transactionList = document.getElementById("transactionList");
+    btn.addEventListener("click", () => {
+        // Income filter
+        if (btn.innerHTML === "Income") {
+            let transactions = JSON.parse(localStorage.getItem("transactions"));
+            let filteredTrans = transactions.filter((t) => {
+                return t.type === "income";
+            });
+            updateTransactions();
+
+            // Rendering Transactions
+            filteredTrans.forEach((trans) => {
+                if (trans.month === months.value) {
+                    transactionList.innerHTML += `<div class="transaction-item ${trans.type}-item">
+                    <div class="transaction-info">
+                    <h4>${trans.title}</h4>
+                    <p>${trans.category} • ${trans.date}</p>
+                    </div>
+                    <span class="transaction-amount ${trans.type}">
+                    ${trans.type === 'income' ? '+' : '-'} ${trans.amount + "₹"}
+                    </span>
+                    <button class="delete-btn" data-id="${trans.id}">X</button>
+                    </div>`
+                }
+            });
+            transactionList.innerHTML === "" ? transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Please change your month!</div>' : "";
+        }
+        // Expense filter
+        else if (btn.innerHTML === "Expenses") {
+            let transactions = JSON.parse(localStorage.getItem("transactions"));
+            let filteredTrans = transactions.filter((t) => {
+                return t.type === "expense";
+            });
+            updateTransactions();
+            filteredTrans.forEach((trans) => {
+                if (trans.month === months.value) {
+                    transactionList.innerHTML += `<div class="transaction-item ${trans.type}-item">
+                    <div class="transaction-info">
+                    <h4>${trans.title}</h4>
+                    <p>${trans.category} • ${trans.date}</p>
+                    </div>
+                    <span class="transaction-amount ${trans.type}">
+                        ${trans.type === 'income' ? '+' : '-'} ${trans.amount + "₹"}
+                    </span>
+                    <button class="delete-btn" data-id="${trans.id}">X</button>
+                    </div>`
+                }
+            });
+            transactionList.innerHTML === "" ? transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Please change your month!</div>' : "";
+        }
+        else {
+            updateTransactions();
+            displayTransactions();
+        }
+    });
+});
+
+
+// Income/Expense Dashboard
+const dashboard = () => {
+    let totalExpense = document.getElementById("total-expense");
+    let totalIncome = document.getElementById("total-income");
+    let balance = document.getElementById("balance");
+    let income = 0;
+    let expense = 0;
+    let leftBalance = 0;
+    
+    // Total Income
+    const totalIncomeFunction = () => {
+        let transaction = JSON.parse(localStorage.getItem("transactions")) || [];
+        transaction.forEach((trans) => {
+            if (trans.month === months.value && trans.type == "income") {
+                income += Number(trans.amount);
+            }
+        });
+        income > 0 ? totalIncome.innerHTML = "₹" + income : totalIncome.innerHTML = "₹0.00";
+    }
+
+    // Total Expense
+    const totalExpenseFunction = () => {
+        let transaction = JSON.parse(localStorage.getItem("transactions")) || [];
+        transaction.forEach((trans) => {
+            if (trans.month === months.value && trans.type == "expense") {
+                expense += Number(trans.amount);
+            }
+        });
+        expense > 0 ? totalExpense.innerHTML = "₹" + expense : totalExpense.innerHTML = "₹0.00";
+    }
+    
+    totalIncomeFunction();
+    totalExpenseFunction();
+
+    // Total left balance
+    leftBalance = income - expense;
+    leftBalance > 0 || income >=0 ? balance.innerHTML = "₹" + leftBalance : balance.innerHTML = "₹0.00";
+}
