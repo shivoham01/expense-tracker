@@ -38,7 +38,7 @@ const monthChange = () => {
 
     // If No Transactions on selected month
     if (transactionList.innerHTML === "") {
-        transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Please change your month!</div>';
+        transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Add your first Transaction!</div>';
     }
 }
 
@@ -69,6 +69,15 @@ const displayTransactions = () => {
             </div>`
         }
     });
+
+    // If No Transactions on selected month
+    let monthTrans = transactions.filter((t) => {
+        return t.month === months.value;
+    });
+
+    if (monthTrans.length === 0) {
+        transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Add your first Transaction!</div>';
+    }
 
     dashboard();
 }
@@ -149,6 +158,10 @@ filterBtn.forEach((btn) => {
             });
             updateTransactions();
 
+
+            // Sorting transactions in reverse
+            filteredTrans.sort((a, b) => b.id - a.id);
+
             // Rendering Transactions
             filteredTrans.forEach((trans) => {
                 if (trans.month === months.value) {
@@ -164,8 +177,9 @@ filterBtn.forEach((btn) => {
                     </div>`
                 }
             });
-            transactionList.innerHTML === "" ? transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Please change your month!</div>' : "";
+            transactionList.innerHTML === "" ? transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Add your first Transaction!</div>' : "";
         }
+
         // Expense filter
         else if (btn.innerHTML === "Expenses") {
             let transactions = JSON.parse(localStorage.getItem("transactions"));
@@ -173,6 +187,10 @@ filterBtn.forEach((btn) => {
                 return t.type === "expense";
             });
             updateTransactions();
+
+            // Sorting transactions in reverse
+            filteredTrans.sort((a, b) => b.id - a.id);
+
             filteredTrans.forEach((trans) => {
                 if (trans.month === months.value) {
                     transactionList.innerHTML += `<div class="transaction-item ${trans.type}-item">
@@ -187,7 +205,7 @@ filterBtn.forEach((btn) => {
                     </div>`
                 }
             });
-            transactionList.innerHTML === "" ? transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Please change your month!</div>' : "";
+            transactionList.innerHTML === "" ? transactionList.innerHTML = '<div class="empty-state">No transactions found in this month. Add your first Transaction!</div>' : "";
         }
         else {
             updateTransactions();
@@ -205,7 +223,7 @@ const dashboard = () => {
     let income = 0;
     let expense = 0;
     let leftBalance = 0;
-    
+
     // Total Income
     const totalIncomeFunction = () => {
         let transaction = JSON.parse(localStorage.getItem("transactions")) || [];
@@ -227,11 +245,11 @@ const dashboard = () => {
         });
         expense > 0 ? totalExpense.innerHTML = "₹" + expense : totalExpense.innerHTML = "₹0.00";
     }
-    
+
     totalIncomeFunction();
     totalExpenseFunction();
 
     // Total left balance
     leftBalance = income - expense;
-    leftBalance > 0 || income >=0 ? balance.innerHTML = "₹" + leftBalance : balance.innerHTML = "₹0.00";
+    leftBalance > 0 || income >= 0 ? balance.innerHTML = "₹" + leftBalance : balance.innerHTML = "₹0.00";
 }
