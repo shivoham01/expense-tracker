@@ -10,11 +10,12 @@ const updateTransactions = () => {
     transactionList.innerHTML = "";
 }
 
+let monthsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 // Onload
 document.addEventListener("DOMContentLoaded", (e) => {
     // Show all transactions when page load
     let months = document.getElementById("months");
-    let monthsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     //  Get current month
     let date = new Date();
@@ -214,7 +215,6 @@ filterBtn.forEach((btn) => {
     });
 });
 
-
 // Income/Expense Dashboard
 const dashboard = () => {
     let totalExpense = document.getElementById("total-expense");
@@ -253,3 +253,161 @@ const dashboard = () => {
     leftBalance = income - expense;
     leftBalance > 0 || income >= 0 ? balance.innerHTML = "₹" + leftBalance : balance.innerHTML = "₹0.00";
 }
+
+// Total Category Amount
+const totalByCategory = () => {
+    let transactions = JSON.parse(localStorage.getItem("transactions"));
+    let totalExpense = 0;
+    // Setting month
+    let date = new Date();
+    let monthNum = date.getMonth();
+    let currentMonth = monthsArray[monthNum];
+    months.value = currentMonth;
+
+    // Total Expense
+    let transaction = JSON.parse(localStorage.getItem("transactions")) || [];
+    let expense = 0;
+    transaction.forEach((trans) => {
+        if (trans.month === months.value && trans.type == "expense") {
+            expense += Number(trans.amount);
+        }
+        totalExpense = expense;
+    });
+
+    // Food filter
+    const foodCategory = () => {
+        let foodMeter = document.getElementById("food-meter");
+        let foodMoney = document.getElementById("food-money");
+        let foodPrctg = document.getElementById("food-prctg");
+        let foodFilter = transactions.filter((trans) => {
+            if (trans.month == months.value) {
+                return trans.category === "food";
+            }
+        });
+        let foodExpense = 0;
+        foodFilter.forEach((amt) => {
+            foodExpense = foodExpense + Number(amt.amount);
+        });
+        let foodPresentage = (foodExpense / totalExpense) * 100;
+        foodMeter.value = Number(foodPresentage.toFixed(2));
+        foodMoney.innerHTML = "₹" + foodExpense;
+        foodPrctg.innerHTML = Number(foodPresentage.toFixed(2)) + "% of total expense";
+    }
+    foodCategory();
+
+    // Transport filter
+    const transportCategory = () => {
+        let transportMeter = document.getElementById("transport-meter");
+        let transportMoney = document.getElementById("transport-money");
+        let transportPrctg = document.getElementById("transport-prctg");
+        let transportFilter = transactions.filter((trans) => {
+            if (trans.month == months.value) {
+                return trans.category === "transport";
+            }
+        });
+        let transportExpense = 0;
+        transportFilter.forEach((amt) => {
+            transportExpense = transportExpense + Number(amt.amount);
+        });
+        let transportPresentage = (transportExpense / totalExpense) * 100;
+        transportMeter.value = Number(transportPresentage.toFixed(2));
+
+        transportMoney.innerHTML = "₹" + transportExpense;
+        transportPrctg.innerHTML = Number(transportPresentage.toFixed(2)) + "% of total expense";
+    }
+    transportCategory();
+
+    // Utilities filter
+    const utilitiesCategory = () => {
+        let utilitiesMeter = document.getElementById("utilities-meter");
+        let utilitiesMoney = document.getElementById("utilities-money");
+        let utilitiesPrctg = document.getElementById("utilities-prctg");
+
+        let utilitiesFilter = transactions.filter((trans) => {
+            if (trans.month == months.value) {
+                return trans.category === "utilities";
+            }
+        });
+        let utilitesExpense = 0;
+        utilitiesFilter.forEach((amt) => {
+            utilitesExpense = utilitesExpense + Number(amt.amount);
+        });
+
+        let utilitiesPresentage = (utilitesExpense / totalExpense) * 100;
+        utilitiesMeter.value = Number(utilitiesPresentage.toFixed(2));
+
+        utilitiesMoney.innerHTML = "₹" + utilitesExpense;
+        utilitiesPrctg.innerHTML = Number(utilitiesPresentage.toFixed(2)) + "% of total expense";
+    }
+    utilitiesCategory();
+
+    // Entertainment filter
+    const entertainmentCategory = () => {
+        let entmntMeter = document.getElementById("entertainment-meter");
+        let entmntMoney = document.getElementById("entertainment-money");
+        let entmntPrctg = document.getElementById("entertainment-prctg");
+
+        let entertainmentFilter = transactions.filter((trans) => {
+            if (trans.month == months.value) {
+                return trans.category === "entertainment";
+            }
+        });
+        let entertainmentExpense = 0;
+        entertainmentFilter.forEach((amt) => {
+            entertainmentExpense = entertainmentExpense + Number(amt.amount);
+        });
+        let entmntPresentage = (entertainmentExpense / totalExpense) * 100;
+        entmntMeter.value = Number(entmntPresentage.toFixed(2));
+
+        entmntMoney.innerHTML = "₹" + entertainmentExpense;
+        entmntPrctg.innerHTML = Number(entmntPresentage.toFixed(2)) + "% of total expense";
+    }
+    entertainmentCategory();
+
+    // Healthcare filter
+    const healthcareCategory = () => {
+        let healthcareMeter = document.getElementById("healthcare-meter");
+        let healthcareMoney = document.getElementById("healthcare-money");
+        let healthcarePrctg = document.getElementById("healthcare-prctg");
+
+        let healthcareFilter = transactions.filter((trans) => {
+            if (trans.month == months.value) {
+                return trans.category === "healthcare";
+            }
+        });
+        let healthcareExpense = 0;
+        healthcareFilter.forEach((amt) => {
+            healthcareExpense = healthcareExpense + Number(amt.amount);
+        });
+        let healthcarePresentage = (healthcareExpense / totalExpense) * 100;
+        healthcareMeter.value = Number(healthcarePresentage.toFixed(2));
+
+        healthcareMoney.innerHTML = "₹" + healthcareExpense;
+        healthcarePrctg.innerHTML = Number(healthcarePresentage.toFixed(2)) + "% of total expense";
+    }
+    healthcareCategory();
+
+    // Other filter
+    const otherCategory = () => {
+        let otherMeter = document.getElementById("other-meter");
+        let otherMoney = document.getElementById("other-money");
+        let otherPrctg = document.getElementById("other-prctg");
+
+        let otherFilter = transactions.filter((trans) => {
+            if (trans.month == months.value) {
+                return trans.category === "other";
+            }
+        });
+        let otherExpense = 0;
+        otherFilter.forEach((amt) => {
+            otherExpense = otherExpense + Number(amt.amount);
+        });
+        let otherPresentage = (otherExpense / totalExpense) * 100;
+        otherMeter.value = Number(otherPresentage.toFixed(2));
+
+        otherMoney.innerHTML = "₹" + otherExpense;
+        otherPrctg.innerHTML = Number(otherPresentage.toFixed(2)) + "% of total expense";
+    }
+    otherCategory();
+}
+totalByCategory();
