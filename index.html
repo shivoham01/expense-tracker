@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -69,6 +71,60 @@
             </form>
         </div>
 
+        <!-- Category Breakdown -->
+        <div class="category">
+            <h2>📊 Category Breakdown</h2>
+            <div class="all-category">
+                <!-- Food -->
+                <div class="catgr">
+                    <span>Food: 🍔</span>
+                    <span id="food-money">₹450</span>
+                </div>
+                <meter id="food-meter" value="23" min="0" max="100"></meter>
+                <div class="prctg" id="food-prctg"></div>
+
+                <!-- Transport -->
+                <div class="catgr">
+                    <span>Transport: 🚗</span>
+                    <span id="transport-money"></span>
+                </div>
+                <meter value="23" id="transport-meter" min="0" max="100"></meter>
+                <div class="prctg" id="transport-prctg"></div>
+
+                <!-- Utilities -->
+                 <div class="catgr">
+                     <span>Utilities: 💡</span>
+                    <span id="utilities-money"></span>
+                </div>
+                <meter value="23" id="utilities-meter" min="0" max="100"></meter>
+                <div class="prctg" id="utilities-prctg"></div>
+
+                <!-- Entertainment -->
+                 <div class="catgr">
+                     <span>Entertainment: 🎬</span>
+                    <span id="entertainment-money"></span>
+                </div>
+                <meter value="23" id="entertainment-meter" min="0" max="100"></meter>
+                <div class="prctg" id="entertainment-prctg"></div>
+
+                <!-- Healthcare -->
+                 <div class="catgr">
+                     <span>Healthcare: 🏥</span>
+                    <span id="healthcare-money"></span>
+                </div>
+                <meter value="23" id="healthcare-meter" min="0" max="100"></meter>
+                <div class="prctg" id="healthcare-prctg"></div>
+
+                <!-- Other -->
+                 <div class="catgr">
+                     <span>Other: 📦</span>
+                    <span id="other-money"></span>
+                </div>
+                <meter value="23" id="other-meter" min="0" max="100"></meter>
+                <div class="prctg" id="other-prctg"></div>
+            </div>
+        </div>
+
         <!-- TRANSACTION LIST SECTION - This shows your expenses/income -->
         <div class="transactions">
             <h2>Transaction History</h2>
@@ -83,4 +139,5 @@
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>
