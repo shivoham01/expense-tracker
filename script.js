@@ -129,6 +129,7 @@ addTransaction.addEventListener("click", (e) => {
 
     updateTransactions();
     displayTransactions();
+    totalByCategory();
 });
 
 // Delete Transaction
@@ -411,3 +412,4 @@ const totalByCategory = () => {
     otherCategory();
 }
 totalByCategory();
+
