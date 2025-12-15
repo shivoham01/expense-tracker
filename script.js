@@ -144,6 +144,7 @@ transactionList.addEventListener("click", (e) => {
         localStorage.setItem("transactions", JSON.stringify(filteredTransactions));
         updateTransactions();
         displayTransactions()
+        totalByCategory();
     }
 })
 
@@ -412,4 +413,5 @@ const totalByCategory = () => {
     otherCategory();
 }
 totalByCategory();
+
 
