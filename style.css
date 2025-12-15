@@ -296,7 +296,7 @@ body {
   justify-content: space-between;
 }
 
-#food-money, #transport-money{
+#food-money, #transport-money, #utilities-money, #entertainment-money, #healthcare-money, #other-money{
   color: #ef4444;
 }
 
@@ -365,3 +365,4 @@ body {
     font-size: 20px;
   }
 }
+
