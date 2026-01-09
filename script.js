@@ -256,7 +256,7 @@ const dashboard = () => {
     leftBalance > 0 || income >= 0 ? balance.innerHTML = "₹" + leftBalance : balance.innerHTML = "₹0.00";
 }
 
-
+// Setting for category when month change
 let selectedMonths = document.getElementById("months")
 selectedMonths.addEventListener("change", ()=>{
     totalByCategory();
